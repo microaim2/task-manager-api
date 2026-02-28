@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
+const { validationResult } = require('express-validator');
 
 function signToken(user) {
   return jwt.sign(
@@ -11,6 +12,10 @@ function signToken(user) {
 }
 
 async function register(req, res) {
+  const errors = validationResult(req);
+if (!errors.isEmpty()) {
+  return res.status(400).json({ errors: errors.array() });
+}
   const { email, password } = req.body;
 
   if (!email || !password || password.length < 6) {
