@@ -2,6 +2,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 
 const db = require('./config/db');
 const authRoutes = require('./routes/auth.routes');
@@ -43,6 +45,8 @@ app.get('/health/db', async (req, res) => {
     res.status(500).json({ ok: false, error: e.message });
   }
 });
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // error handler (last)
 app.use((err, req, res, next) => {
